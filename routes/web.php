@@ -1,8 +1,9 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ApplianceController;
+use Illuminate\Support\Facades\Route;
 use GuzzleHttp\Middleware;
 
 Route::get('/', [HomeController::class,'home']);
@@ -20,3 +21,6 @@ Route::middleware('auth')->group(function () {
 require __DIR__.'/auth.php';
 
 route::get('admin/dashboard', [HomeController::class,'index'])->middleware(['auth','admin']);
+
+Route::get('/appliances', [ApplianceController::class,'appliances']);
+Route::get('/appliancedetail', [ApplianceController::class,'appliancedetail']);
