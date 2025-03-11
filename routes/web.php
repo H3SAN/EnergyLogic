@@ -19,8 +19,10 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
-
+// Route for the admin page
 route::get('admin/dashboard', [HomeController::class,'index'])->middleware(['auth','admin']);
-
+// Routes for the Appliance pages
 Route::get('/appliances', [ApplianceController::class,'appliances']);
 Route::get('/appliancedetail', [ApplianceController::class,'appliancedetail']);
+Route::post('/add-appliance', [ApplianceController::class, 'add_appliance']);
+
