@@ -51,10 +51,10 @@
                         <td>{{$data->daily_usage_hours}}</td>
                         <td>{{$data->energy_efficiency_rating}}</td>
                         <td>
-                            <a href="#" class="btn btn-primary btn-circle btn-sm">
+                            <a href="{{ route('appliances.show')}}" class="btn btn-primary btn-circle btn-sm">
                                 <i class="fas fa-eye"></i>
                             </a>
-                            <a href="#" class="btn btn-danger btn-circle btn-sm">
+                            <a href="{{ route('appliances.delete', ['id' => $data->id])}}"  onclick="confirmation(event)" class="btn btn-danger btn-circle btn-sm">
                                 <i class="fas fa-trash"></i>
                             </a>
                         </td>
@@ -76,7 +76,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form id="addApplianceForm" method="POST" action="{{ url('/add-appliance') }}">
+                <form id="addApplianceForm" method="POST" action="{{ route('appliances.add') }}">
                     @csrf
                     <div class="form-group">
                         <label for="applianceName">Name</label>
@@ -137,7 +137,4 @@
         </div>
     </div>
 </div>
-
-
-
 @endsection

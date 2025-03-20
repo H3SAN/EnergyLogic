@@ -15,6 +15,7 @@ class Appliances extends Model
      * @var array
      */
     protected $fillable = [
+
         'name',
         'power_rating_watts',
         'status',

@@ -30,14 +30,14 @@
 
           <!-- Nav Item - Appliances -->
           <li class="nav-item">
-            <a class="nav-link" href="appliances">
+            <a class="nav-link" href="{{ route('appliances.index') }}">
                 <i class="fas fa-fw fa-microchip"></i>
                 <span>Appliances</span></a>
           </li>
 
           <!-- Nav Item - Cost Analysis -->
           <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="/costa">
                 <i class="fas fa-fw fa-chart-line"></i>
                 <span>Cost Analysis</span></a>
           </li>
