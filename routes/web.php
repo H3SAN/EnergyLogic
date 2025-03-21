@@ -35,4 +35,4 @@ Route::prefix('appliances')->group(function () {
 });
 
 // Routes for the cost analysis
-Route::get('/costa', [HomeController::class,'costanalysis']);
+Route::get('/cost-analysis', [HomeController::class,'costanalysis']);

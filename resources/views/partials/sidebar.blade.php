@@ -37,7 +37,7 @@
 
           <!-- Nav Item - Cost Analysis -->
           <li class="nav-item">
-            <a class="nav-link" href="/costa">
+            <a class="nav-link" href="/cost-analysis">
                 <i class="fas fa-fw fa-chart-line"></i>
                 <span>Cost Analysis</span></a>
           </li>
