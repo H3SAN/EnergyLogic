@@ -23,10 +23,11 @@ class HomeController extends Controller
     }
 
     // Cost analysis functions
-    public function costanalysis(){
+    public function costanalysis(Request $request){
         $Power = UsageRecord::sum('power_consumed'); //returns the total power consumed
         $totalCost = $Power * 0.15; //assuming cost per
 
+        dd($request -> all());
         return view('home.costanalysis', [
             'totalPowerConsumed' => $Power,
             'totalCost' => $totalCost

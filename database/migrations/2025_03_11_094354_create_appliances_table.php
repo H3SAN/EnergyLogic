@@ -14,6 +14,7 @@ return new class extends Migration {
     {
         Schema::create('appliances', function (Blueprint $table) {
             $table->id();
+            $table->integer(column: 'user_id');
             $table->string('name');
             $table->decimal('power_rating_watts', 10, 2);
             $table->enum('status', ['on', 'off', 'standby'])->default('on');

@@ -3,14 +3,15 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ApplianceController;
+use App\Http\Controllers\ScheduleController;
 use Illuminate\Support\Facades\Route;
 use GuzzleHttp\Middleware;
 
 Route::get('/', [HomeController::class,'home']);
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+    return view('home.index');
+})->middleware(['auth', 'verified'])->name('home');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -36,3 +37,8 @@ Route::prefix('appliances')->group(function () {
 
 // Routes for the cost analysis
 Route::get('/cost-analysis', [HomeController::class,'costanalysis']);
+
+// Routes for the schedule pages
+Route::prefix('schedule')->group(function () {
+    Route::get('/', [ScheduleController::class, 'index'])->name('schedule.index'); // List all appliances
+});
