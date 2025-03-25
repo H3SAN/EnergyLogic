@@ -3,7 +3,7 @@
 @section('title', 'Cost Analysis')
 
 @section('content')
-<div class="row ju">
+<div class="row justify-content-between">
   <div class="col-xl-7">
     <div class="card shadow mb-4">
       <div class="card-header py-3">
@@ -32,6 +32,12 @@
       </form>
     </div>
   </div>
+  {{-- Print data --}}
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800"></h1>
+    <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#addModal"><i
+            class="fas fa-plus fa-sm text-white-50"></i> Print data</a>
+</div>
 </div>
 
 <div class="row">

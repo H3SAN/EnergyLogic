@@ -51,7 +51,7 @@
                         <td>{{$data->daily_usage_hours}}</td>
                         <td>{{$data->energy_efficiency_rating}}</td>
                         <td>
-                            <a href="{{ route('appliances.show')}}" class="btn btn-primary btn-circle btn-sm">
+                            <a href="{{ url('appliances.show')}}" class="btn btn-primary btn-circle btn-sm">
                                 <i class="fas fa-eye"></i>
                             </a>
                             <a href="{{ route('appliances.delete', ['id' => $data->id])}}"  onclick="confirmation(event)" class="btn btn-danger btn-circle btn-sm">
