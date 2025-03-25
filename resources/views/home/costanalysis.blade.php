@@ -3,63 +3,52 @@
 @section('title', 'Cost Analysis')
 
 @section('content')
-<div class="row">
-  <div class="col-xl-12">
+<div class="row ju">
+  <div class="col-xl-7">
     <div class="card shadow mb-4">
       <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary">Filter search</h6>
       </div>
-      <div class="card-body d-flex gap-3">
-                <!-- Date Range Selection -->
-                <div class="mr-3 w-1/5">
-                  <label class="block text-sm font-medium">Date Range:</label>
-                  <div class="flex space-x-2">
-                      <input type="date" class="border p-2 rounded w-1/2" id="start_date">
-                      <input type="date" class="border p-2 rounded w-1/2" id="end_date">
-                  </div>
+      <form action="{{route('/cost-analysis')}}" method="GET">
+        <div class="card-body d-flex gap-3">
+            <!-- Date Range Selection -->
+            <div class="mr-3 w-1/5">
+              <label class="block text-sm font-medium">Date Range:</label>
+              <div class="flex space-x-2">
+                  <input type="date" class="border p-2 rounded w-1/2" id="start_date">
+                  <input type="date" class="border p-2 rounded w-1/2" id="end_date">
               </div>
-              <!-- Date Range Selection -->
-              <div class="mr-3 w-1/5">
-                <label class="block text-sm font-medium">Appliance Category:</label>
-                <div class="flex space-x-2">
-                  <select class="border p-2 rounded w-full" id="appliance_category">
-                    <option value="">All Categories</option>
-                    <option value="kitchen">Kitchen</option>
-                    <option value="entertainment">Entertainment</option>
-                    <option value="heating">Heating & Cooling</option>
-                    <option value="lighting">Lighting</option>
-                </select>
-                </div>
-            </div>
-
-           <!-- Date Range Selection -->
-           <div class="mr-3 w-1/5">
-            <label class="block text-sm font-medium">Sort By:</label>
-            <div class="flex space-x-2">
-              <select class="border p-2 rounded w-full" id="sort_by">
-                <option value="power_high">Highest Power Usage</option>
-                <option value="power_low">Lowest Power Usage</option>
-                <option value="name_asc">Name (A-Z)</option>
-                <option value="name_desc">Name (Z-A)</option>
-            </select>
-            </div>
-        </div>
-        <!-- Date Range Selection -->
-        <div class="mr-3 w-1/5">
-          <label class="block text-sm font-medium">Search Appliance:</label>
-          <div class="flex space-x-2">
-            <input type="text" placeholder="Enter appliance name" class="border p-2 rounded w-full" id="search_appliance">
           </div>
-      </div>
-      <div class="mt-4 mr-3">
-        <a href="#" class="btn btn-primary btn-icon-split">
-          <span class="icon text-white-50">
-              <i class="fas fa-filter"></i>
-          </span>
-          <span class="text">Filter</span>
-      </a>
+
+       <!--Sort by Selection -->
+       <div class="mr-3 w-1/5">
+        <label class="block text-sm font-medium">Sort By:</label>
+        <div class="flex space-x-2">
+          <select class="border p-2 rounded w-full" id="sort_by">
+            <option value="power_high">Highest Power Usage</option>
+            <option value="power_low">Lowest Power Usage</option>
+            <option value="name_asc">Name (A-Z)</option>
+            <option value="name_desc">Name (Z-A)</option>
+        </select>
+        </div>
     </div>
+    <!-- Search Operation -->
+    <div class="mr-3 w-1/5">
+      <label class="block text-sm font-medium">Search Appliance:</label>
+      <div class="flex space-x-2">
+        <input type="text" placeholder="Enter appliance name" class="border p-2 rounded w-full" id="search_appliance">
       </div>
+  </div>
+  <div class="mt-4 mr-3">
+    <a href="#" class="btn btn-primary btn-icon-split">
+      <span class="icon text-white-50">
+          <i class="fas fa-filter"></i>
+      </span>
+      <span class="text">Filter</span>
+  </a>
+</div>
+  </div>
+      </form>
     </div>
   </div>
 </div>
@@ -74,7 +63,7 @@
                   <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                         Total Power Consumption (kWh)</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">8500kwh</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $totalPowerConsumed }} kwh</div>
                   </div>
                   <div class="col-auto">
                       <i class="fas fa-bolt fa-2x text-gray-300"></i>
@@ -92,7 +81,7 @@
                   <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                         Total Operating Cost</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">$5,134</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">$ {{ number_format($totalCost, 2) }} </div>
                   </div>
                   <div class="col-auto">
                       <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -264,16 +253,6 @@
                       <td>{{$data->power_rating_watts}}</td>
                       <td>{{$data->status}}</td>
                       <td>{{$data->schedule_time}}</td>
-                      <td>{{$data->daily_usage_hours}}</td>
-                      <td>{{$data->energy_efficiency_rating}}</td>
-                      <td>
-                          <a href="{{ route('appliances.show')}}" class="btn btn-primary btn-circle btn-sm">
-                              <i class="fas fa-eye"></i>
-                          </a>
-                          <a href="{{ route('appliances.delete', ['id' => $data->id])}}"  onclick="confirmation(event)" class="btn btn-danger btn-circle btn-sm">
-                              <i class="fas fa-trash"></i>
-                          </a>
-                      </td>
                       </tr>
                       @endforeach
                 </tbody> --}}

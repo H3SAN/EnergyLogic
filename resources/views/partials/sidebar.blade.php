@@ -42,6 +42,13 @@
                 <span>Cost Analysis</span></a>
           </li>
 
+          <!-- Nav Item - Schedule -->
+          <li class="nav-item">
+            <a class="nav-link" href="{{ route('schedule.index') }}">
+                <i class="fas fa-fw fa-clipboard-list"></i>
+                <span>Schedule</span></a>
+          </li>
+
           <!-- Divider -->
           <hr class="sidebar-divider">
 
