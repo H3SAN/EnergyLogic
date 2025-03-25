@@ -14,15 +14,15 @@ class Appliances extends Model
      *
      * @var array
      */
-    protected $fillable = [
+    protected $table = 'appliances';
 
+    protected $fillable = [
         'name',
         'power_rating_watts',
         'status',
         'schedule_time',
         'daily_usage_hours',
-        'energy_efficiency_rating',
-        'last_used',
+        'energy_efficiency_rating'
     ];
 
     /**

@@ -9,20 +9,18 @@ class UsageRecord extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
+    protected $table = 'usage_records'; // Ensure this matches the actual table name
 
-        'name',
+    protected $fillable = [
         'appliance_id',
         'user_id',
-        'start_time',
-        'end_time',
-        'duration_minutes',
-        'power_consumed_kwh',
+        'schedule_id',
+        'time_used',
+        'power_consumed',
         'cost'
     ];
+
+    public function appliance() {
+        return $this->belongsTo(Appliances::class, 'appliance_id');
+    }
 }

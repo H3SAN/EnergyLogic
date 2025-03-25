@@ -9,43 +9,24 @@
       <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary">Filter search</h6>
       </div>
-      <form action="{{route('/cost-analysis')}}" method="GET">
+      <form action="{{url('/cost-analysis')}}" method="GET">
         <div class="card-body d-flex gap-3">
             <!-- Date Range Selection -->
             <div class="mr-3 w-1/5">
               <label class="block text-sm font-medium">Date Range:</label>
               <div class="flex space-x-2">
-                  <input type="date" class="border p-2 rounded w-1/2" id="start_date">
-                  <input type="date" class="border p-2 rounded w-1/2" id="end_date">
+                  <input type="date" name="start_date" value="{{ request('start_date') }}" class="border p-2 rounded w-1/2" id="start_date">
+                  <input type="date" name="end_date"   value="{{ request('end_date') }}" class="border p-2 rounded w-1/2" id="end_date">
               </div>
           </div>
 
-       <!--Sort by Selection -->
-       <div class="mr-3 w-1/5">
-        <label class="block text-sm font-medium">Sort By:</label>
-        <div class="flex space-x-2">
-          <select class="border p-2 rounded w-full" id="sort_by">
-            <option value="power_high">Highest Power Usage</option>
-            <option value="power_low">Lowest Power Usage</option>
-            <option value="name_asc">Name (A-Z)</option>
-            <option value="name_desc">Name (Z-A)</option>
-        </select>
-        </div>
-    </div>
-    <!-- Search Operation -->
-    <div class="mr-3 w-1/5">
-      <label class="block text-sm font-medium">Search Appliance:</label>
-      <div class="flex space-x-2">
-        <input type="text" placeholder="Enter appliance name" class="border p-2 rounded w-full" id="search_appliance">
-      </div>
-  </div>
   <div class="mt-4 mr-3">
-    <a href="#" class="btn btn-primary btn-icon-split">
+    <button type="submit" class="btn btn-primary btn-icon-split">
       <span class="icon text-white-50">
           <i class="fas fa-filter"></i>
       </span>
       <span class="text">Filter</span>
-  </a>
+  </button>
 </div>
   </div>
       </form>
@@ -63,7 +44,7 @@
                   <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                         Total Power Consumption (kWh)</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $totalPowerConsumed }} kwh</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $totalPower }} kwh</div>
                   </div>
                   <div class="col-auto">
                       <i class="fas fa-bolt fa-2x text-gray-300"></i>
@@ -81,7 +62,7 @@
                   <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                         Total Operating Cost</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">$ {{ number_format($totalCost, 2) }} </div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">$ {{ $totalCost }} </div>
                   </div>
                   <div class="col-auto">
                       <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -97,11 +78,11 @@
           <div class="card-body">
               <div class="row no-gutters align-items-center">
                   <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Least Efficient Appliance
+                      <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Highest cost
                       </div>
                       <div class="row no-gutters align-items-center">
                           <div class="col-auto">
-                              <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">Vacuum cleaner</div>
+                              <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{ $highestCost->appliance->name }}</div>
                           </div>
                       </div>
                   </div>
@@ -121,7 +102,7 @@
                   <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                         Most Power-Hungry Appliance</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">Washing machine</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $highestPower->appliance->name }}</div>
                   </div>
                   <div class="col-auto">
                       <i class="fas fa-plug fa-2x text-gray-300"></i>
@@ -235,7 +216,7 @@
                         <th>Appliance name</th>
                         <th>Total Usage (kWh)</th>
                         <th>Cost ($)</th>
-                        <th>Avg. Daily Usage</th>
+                        <th>Usage time (min)</th>
                     </tr>
                 </thead>
                 <tfoot>
@@ -243,19 +224,17 @@
                     <th>Appliance name</th>
                     <th>Total Usage (kWh)</th>
                     <th>Cost ($)</th>
-                    <th>Avg. Daily Usage</th>
+                    <th>Usage time (min)</th>
                 </tr>
                 </tfoot>
-                {{-- <tbody>
-                  @foreach($data as $data)
-                  <tr>
-                      <td>{{$data->name}}</td>
-                      <td>{{$data->power_rating_watts}}</td>
-                      <td>{{$data->status}}</td>
-                      <td>{{$data->schedule_time}}</td>
-                      </tr>
-                      @endforeach
-                </tbody> --}}
+                @foreach($usage as $record)
+                <tr>
+                    <td>{{ $record->appliance->name ?? 'N/A' }}</td>
+                    <td>{{ number_format($record->total_power, 2) }}</td>
+                    <td>${{ number_format($record->total_cost, 2) }}</td>
+                    <td>{{ $record->used_time }}</td>
+                </tr>
+            @endforeach
             </table>
         </div>
     </div>
