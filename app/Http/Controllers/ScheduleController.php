@@ -26,11 +26,12 @@ class ScheduleController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'appliances' => 'required|array',
-            'appliances.*' => 'exists:appliances,id',
+            'appliance' => 'required|array',
+            'appliance.*' => 'exists:appliances,id',
             'is_active' => 'nullable|boolean',
         ]);
-    
+            dd($request->all());
+
         $userId = 1;//auth()->id(); // Assuming the user is authenticated
         $isActive = $request->has('is_active') ? 1 : 0;
     
