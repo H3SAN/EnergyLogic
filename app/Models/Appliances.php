@@ -16,15 +16,11 @@ class Appliances extends Model
      */
     protected $table = 'appliances';
 
-    protected $fillable = [
-        'name',
-        'power_rating_watts',
-        'status',
-        'schedule_time',
-        'daily_usage_hours',
-        'energy_efficiency_rating'
-    ];
+    protected $fillable = ['user_id', 'name', 'power_rating_watts', 'status'];
 
+    public function schedules() {
+        return $this->belongsToMany(Schedule::class, 'appliance_schedule');
+    }
     /**
      * The attributes that should be cast.
      *

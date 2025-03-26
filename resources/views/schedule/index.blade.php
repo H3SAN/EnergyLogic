@@ -80,7 +80,7 @@
             <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                 aria-labelledby="dropdownMenuLink">
                 <div class="dropdown-header">Action:</div>
-                <a class="dropdown-item" href="#">Create new</a>
+                <a class="dropdown-item" data-toggle="modal" data-target="#addModal">Create new</a>
             </div>
         </div>
       </div>
@@ -91,33 +91,78 @@
                   <thead>
                       <tr>
                         <th>Schedule</th>
-                        <th>Appliances</th>
                         <th>Actions</th>
                       </tr>
                   </thead>
                   <tfoot>
                     <tr>
                       <th>Schedule</th>
-                      <th>Appliances</th>
                       <th>Actions</th>
                   </tr>
                   </tfoot>
-                  {{-- <tbody>
-                    @foreach($data as $data)
+                  <tbody>
+                    @foreach($schedule as $data)
                     <tr>
                         <td>{{$data->name}}</td>
-                        <td>{{$data->power_rating_watts}}</td>
-                        <td>{{$data->status}}</td>
-                        <td>{{$data->schedule_time}}</td>
+                        <td>{{$data->description}}</td>
                         </tr>
                         @endforeach
-                  </tbody> --}}
+                  </tbody>
               </table>
           </div>
       </div>
       </div>
   </div>
   </div>
-
+  <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addApplianceLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addApplianceLabel">Create new Schedule</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+              <form id="addScheduleForm" method="POST" action="{{ route('schedule.add') }}">
+                @csrf
+            
+                <div class="form-group">
+                  <label for="applianceName">Name</label>
+                  <input type="text" class="form-control" id="applianceName" name="name" placeholder="Enter Schedule name" required>
+              </div>
+              <div class="form-group">
+                <label for="applianceName">Description</label>
+                <input type="longtext" class="form-control" id="applianceName" name="desc" placeholder="notes..." required>
+            </div>
+                <!-- Select Multiple Appliances -->
+                <div class="form-group">
+                    <label for="appliances">Select Appliances</label>
+                    <select class="form-control" id="appliances" name="appliances[]" multiple required>
+                        @foreach($appliances as $appliance)
+                            <option value="{{ $appliance->id }}">{{ $appliance->name }} ({{ $appliance->power_rating_watts }} W)</option>
+                        @endforeach
+                    </select>
+                </div>
+            
+                <!-- Set Active Checkbox -->
+                <div class="form-group">
+                    <label>Set Active</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="setActive" name="status" value="1">
+                        <label class="form-check-label" for="setActive">Enable Schedule</label>
+                    </div>
+                  </div>
+            </form>
+            
+            
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-primary" form="addScheduleForm">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
 </div>
 @endsection

@@ -9,9 +9,9 @@ use GuzzleHttp\Middleware;
 
 Route::get('/', [HomeController::class,'home']);
 
-Route::get('/dashboard', function () {
-    return view('home.index');
-})->middleware(['auth', 'verified'])->name('home');
+// Route::get('/dashboard', function () {
+//     return view('dashboard');
+// })->middleware(['auth', 'verified'])->name('home');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -41,4 +41,5 @@ Route::get('/cost-analysis', [HomeController::class,'costanalysis']);
 // Routes for the schedule pages
 Route::prefix('schedule')->group(function () {
     Route::get('/', [ScheduleController::class, 'index'])->name('schedule.index'); // List all appliances
+    Route::post('/add', [ScheduleController::class, 'addSchedule'])->name('schedule.add'); // Add appliance
 });
