@@ -23,16 +23,14 @@ require __DIR__.'/auth.php';
 // Route for the admin page
 route::get('admin/dashboard', [HomeController::class,'index'])->middleware(['auth','admin']); // Link to the admin page
 
-// Route::get('/appliances', [ApplianceController::class,'appliances']);
-// Route::get('/appliancedetail', [ApplianceController::class,'appliancedetail']);
-// Route::post('/add-appliance', [ApplianceController::class, 'add_appliance']);
-
 // Routes for the Appliance pages
-Route::prefix('appliances')->group(function () {
-    Route::get('/', [ApplianceController::class, 'index'])->name('appliances.index'); // List all appliances
-    Route::get('/view', [ApplianceController::class, 'show'])->name('appliances.show'); // View appliance details
-    Route::post('/add', [ApplianceController::class, 'add'])->name('appliances.add'); // Add appliance
-    Route::get('/delete/{id}', [ApplianceController::class, 'delete'])->name('appliances.delete'); // Delete appliance
+Route::middleware(['auth'])->group(function () {
+    Route::prefix('appliances')->group(function () {
+        Route::get('/', [ApplianceController::class, 'index'])->name('appliances.index'); // List all appliances
+        Route::get('/view', [ApplianceController::class, 'show'])->name('appliances.show'); // View appliance details
+        Route::post('/add', [ApplianceController::class, 'add'])->name('appliances.add'); // Add appliance
+        Route::get('/delete/{id}', [ApplianceController::class, 'delete'])->name('appliances.delete'); // Delete appliance
+    });
 });
 
 // Routes for the cost analysis
