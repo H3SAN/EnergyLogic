@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Appliances;
 use App\Models\Schedule;
-use App\Models\Timeslot;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -26,15 +25,13 @@ class ScheduleController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'appliance' => 'required|array',
-            'appliance.*' => 'exists:appliances,id',
+            'appliances' => 'required|array',
+            'appliances.*' => 'exists:appliances,id',
             'is_active' => 'nullable|boolean',
         ]);
-            dd($request->all());
 
-        $userId = 1;//auth()->id(); // Assuming the user is authenticated
         $isActive = $request->has('is_active') ? 1 : 0;
-    
+        
         $schedule = new Schedule();
         $schedule->name = $request->input('name');
         $schedule->user_id = 1;

@@ -128,12 +128,12 @@
                 @csrf
             
                 <div class="form-group">
-                  <label for="applianceName">Name</label>
-                  <input type="text" class="form-control" id="applianceName" name="name" placeholder="Enter Schedule name" required>
+                  <label for="scheduleName">Name</label>
+                  <input type="text" class="form-control" id="scheduleName" name="name" placeholder="Enter Schedule name" required>
               </div>
               <div class="form-group">
-                <label for="applianceName">Description</label>
-                <input type="longtext" class="form-control" id="applianceName" name="desc" placeholder="notes..." required>
+                <label for="applianceDesc">Description</label>
+                <input type="text" class="form-control" id="applianceDesc" name="description" placeholder="notes..." required>
             </div>
                 <!-- Select Multiple Appliances -->
                 <div class="form-group">
@@ -149,7 +149,7 @@
                 <div class="form-group">
                     <label>Set Active</label>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="setActive" name="status" value="1">
+                        <input class="form-check-input" type="checkbox" id="setActive" name="is_active" value="1">
                         <label class="form-check-label" for="setActive">Enable Schedule</label>
                     </div>
                   </div>
