@@ -8,7 +8,7 @@
     {{-- DataTable --}}
   <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Current Scheduled Devices</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Current Scheduled Devices - {{ $ActiveSchedule->name ?? 'N/A' }}</h6>
     </div>
     <div class="card-body">
         <div class="table-responsive">
@@ -19,9 +19,9 @@
                         <th>Schedule Time</th>
                         <th>Duration</th>
                         <th>Power Consumed (kWh)</th>
-                        <th>Cost</th>
+                        {{-- <th>Cost</th>
                         <th>Actions</th>
-                    </tr>
+                    </tr> --}}
                 </thead>
                 <tfoot>
                   <tr>
@@ -29,20 +29,22 @@
                     <th>Schedule Time</th>
                     <th>Duration</th>
                     <th>Power Consumed (kWh)</th>
-                    <th>Cost</th>
-                    <th>Actions</th>
+                    {{-- <th>Cost</th>
+                    <th>Actions</th> --}}
                 </tr>
                 </tfoot>
-                {{-- <tbody>
-                  @foreach($data as $data)
-                  <tr>
-                      <td>{{$data->name}}</td>
-                      <td>{{$data->power_rating_watts}}</td>
-                      <td>{{$data->status}}</td>
-                      <td>{{$data->schedule_time}}</td>
-                      </tr>
-                      @endforeach
-                </tbody> --}}
+                <tbody>
+                    @foreach($appliances as $data)
+                        @if($data->schedule && $data->schedule->is_active)
+                            <tr>
+                                <td>{{ $data->appliance->name ?? 'N/A' }}</td>
+                                <td>{{ $data->timeslot->name}}</td>
+                                <td>{{ $data->duration ?? 'N/A' }} hours</td>
+                                <td>{{ \Carbon\Carbon::parse($data->appliance->schedule_time)->format('h:i A') ?? 'N/A' }}</td>
+                            </tr>
+                        @endif
+                    @endforeach
+                </tbody>
             </table>
         </div>
     </div>
@@ -131,10 +133,10 @@
                   <label for="scheduleName">Name</label>
                   <input type="text" class="form-control" id="scheduleName" name="name" placeholder="Enter Schedule name" required>
               </div>
-              <div class="form-group">
+              {{-- <div class="form-group">
                 <label for="applianceDesc">Description</label>
-                <input type="text" class="form-control" id="applianceDesc" name="description" placeholder="notes..." required>
-            </div>
+                <input type="text" class="form-control" id="applianceDesc" name="desc" placeholder="notes..." required>
+            </div> --}}
                 <!-- Select Multiple Appliances -->
                 <div class="form-group">
                     <label for="appliances">Select Appliances</label>

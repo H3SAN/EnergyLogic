@@ -50,7 +50,7 @@
                   <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                         Total Power Consumption (kWh)</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $totalPower }} kwh</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $totalPower  ?? 'N/A'}} kwh</div>
                   </div>
                   <div class="col-auto">
                       <i class="fas fa-bolt fa-2x text-gray-300"></i>
@@ -68,7 +68,7 @@
                   <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                         Total Operating Cost</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">$ {{ $totalCost }} </div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">$ {{ $totalCost  ?? 'N/A'}} </div>
                   </div>
                   <div class="col-auto">
                       <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -88,7 +88,7 @@
                       </div>
                       <div class="row no-gutters align-items-center">
                           <div class="col-auto">
-                              <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{ $highestCost->appliance->name }}</div>
+                              <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{ $highestCost->appliance->name  ?? 'N/A'}}</div>
                           </div>
                       </div>
                   </div>
@@ -108,7 +108,7 @@
                   <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                         Most Power-Hungry Appliance</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $highestPower->appliance->name }}</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $highestPower->appliance->name ?? 'N/A'}}</div>
                   </div>
                   <div class="col-auto">
                       <i class="fas fa-plug fa-2x text-gray-300"></i>

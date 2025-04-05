@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Timeslot extends Model
 {
-    //
+    protected $fillable = ['start_time', 'end_time', 'rate_per_kwh'];
 }

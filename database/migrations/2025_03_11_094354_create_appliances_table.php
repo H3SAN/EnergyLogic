@@ -14,15 +14,17 @@ return new class extends Migration {
     {
         Schema::create('appliances', function (Blueprint $table) {
             $table->id();
-            $table->integer(column: 'user_id');
+            $table->integer('user_id');
             $table->string('name');
             $table->decimal('power_rating_watts', 10, 2);
             $table->enum('status', ['on', 'off', 'standby'])->default('on');
             $table->time('schedule_time')->nullable();
             $table->decimal('daily_usage_hours', 4, 2)->default(0.00);
+            $table->float('duration', 4)->default(1.00); 
             $table->enum('energy_efficiency_rating', ['A++', 'A+', 'A', 'B', 'C', 'D', 'E'])->default('A');
             $table->timestamps();
         });
+        
     }
 
     /**

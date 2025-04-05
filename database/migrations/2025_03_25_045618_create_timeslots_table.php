@@ -6,14 +6,17 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
     public function up() {
-        Schema::create('timeslot', function (Blueprint $table) {
+        Schema::create('timeslots', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable();
+            $table->string('start_time')->nullable();
+            $table->string('end_time')->nullable();
             $table->decimal('rate_per_kwh', 10, 4); // Cost per kWh
+            $table->timestamps();
         });
     }
 
     public function down() {
-        Schema::dropIfExists('timeslot');
+        Schema::dropIfExists('timeslots');
     }
 };

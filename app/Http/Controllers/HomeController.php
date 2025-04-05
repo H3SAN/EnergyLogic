@@ -45,10 +45,15 @@ class HomeController extends Controller
             ->with('appliance')
             ->get();
 
-        // Get the appliance with the highest cost
-        $highestCost = $usage->sortByDesc('total_cost')->first();
-        // Get the appliance with the Most power
-        $highestPower = $usage->sortByDesc('total_power')->first();
+        if ($usage == null) {
+            $highestCost = 0;
+            $highestPower = 0;
+        } else {
+            // Get the appliance with the highest cost
+            $highestCost = $usage->sortByDesc('total_cost')->first();
+            // Get the appliance with the Most power
+            $highestPower = $usage->sortByDesc('total_power')->first();
+        }
 
         //dd($request->all());
         return view('home.costanalysis', [

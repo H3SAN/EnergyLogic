@@ -16,34 +16,63 @@ class TimeslotSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('timeslot')->insert([[
-            'name' => '00:00:00',
-            'rate_per_kwh' => 0.15
-        ],
-        [
-            'name' => '03:00:00',
-            'rate_per_kwh' => 0.18
-        ],
-        [
-            'name' => '06:00:00',
-            'rate_per_kwh' => 0.12
-        ],
-        [
-            'name' => '12:00:00',
-            'rate_per_kwh' => 0.22
-        ],
-        [
-            'name' => '15:00:00',
-            'rate_per_kwh' => 0.10
-        ],
-        [
-            'name' => '18:00:00',
-            'rate_per_kwh' => 0.17
-        ],
-        [
-            'name' => '21:00:00',
-            'rate_per_kwh' => 0.25
-        ]
+        DB::table('timeslots')->insert([
+            [
+                'name' => '00:00:00',
+                'start_time' => '00:00:00',
+                'end_time' => '03:00:00',
+                'rate_per_kwh' => 0.15,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => '03:00:00',
+                'start_time' => '03:00:00',
+                'end_time' => '06:00:00',
+                'rate_per_kwh' => 0.18,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => '06:00:00',
+                'start_time' => '06:00:00',
+                'end_time' => '12:00:00',
+                'rate_per_kwh' => 0.12,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => '12:00:00',
+                'start_time' => '12:00:00',
+                'end_time' => '15:00:00',
+                'rate_per_kwh' => 0.22,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => '15:00:00',
+                'start_time' => '15:00:00',
+                'end_time' => '18:00:00',
+                'rate_per_kwh' => 0.10,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => '18:00:00',
+                'start_time' => '18:00:00',
+                'end_time' => '21:00:00',
+                'rate_per_kwh' => 0.17,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => '21:00:00',
+                'start_time' => '21:00:00',
+                'end_time' => '00:00:00',
+                'rate_per_kwh' => 0.25,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]
         ]);
     }
 }
