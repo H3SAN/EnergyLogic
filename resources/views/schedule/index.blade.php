@@ -18,7 +18,7 @@
                         <th>Appliance</th>
                         <th>Schedule Time</th>
                         <th>Duration</th>
-                        <th>Power Consumed (kWh)</th>
+                        <th>Estimated Cost (Daily)</th>
                         {{-- <th>Cost</th>
                         <th>Actions</th>
                     </tr> --}}
@@ -28,7 +28,7 @@
                     <th>Appliance</th>
                     <th>Schedule Time</th>
                     <th>Duration</th>
-                    <th>Power Consumed (kWh)</th>
+                    <th>Estimated Cost (Daily)</th>
                     {{-- <th>Cost</th>
                     <th>Actions</th> --}}
                 </tr>
@@ -40,7 +40,8 @@
                                 <td>{{ $data->appliance->name ?? 'N/A' }}</td>
                                 <td>{{ $data->timeslot->name}}</td>
                                 <td>{{ $data->duration ?? 'N/A' }} hours</td>
-                                <td>{{ \Carbon\Carbon::parse($data->appliance->schedule_time)->format('h:i A') ?? 'N/A' }}</td>
+                                <td>{{ $data->estimated_cost ?? 'N/A' }}</td>
+                                {{-- <td>{{ \Carbon\Carbon::parse($data->appliance->schedule_time)->format('h:i A') ?? 'N/A' }}</td> --}}
                             </tr>
                         @endif
                     @endforeach
@@ -106,7 +107,9 @@
                     @foreach($schedule as $data)
                     <tr>
                         <td>{{$data->name}}</td>
-                        <td>{{$data->description}}</td>
+                        <td><a href="#" class="btn btn-success btn-circle btn-sm">
+                            <i class="fas fa-check"></i>
+                        </a></td>
                         </tr>
                         @endforeach
                   </tbody>
@@ -141,8 +144,8 @@
                 <div class="form-group">
                     <label for="appliances">Select Appliances</label>
                     <select class="form-control" id="appliances" name="appliances[]" multiple required>
-                        @foreach($appliances as $appliance)
-                            <option value="{{ $appliance->id }}">{{ $appliance->name }} ({{ $appliance->power_rating_watts }} W)</option>
+                        @foreach($AllAppliances as $allappliance)
+                            <option value="{{ $allappliance->id }}">{{ $allappliance->name }} ({{ $allappliance->power_rating_watts }} W)</option>
                         @endforeach
                     </select>
                 </div>

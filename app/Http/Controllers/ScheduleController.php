@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Appliances;
 use App\Models\ApplianceSchedule;
 use App\Models\Schedule;
 use Illuminate\Http\Request;
@@ -12,20 +13,28 @@ class ScheduleController extends Controller
 {
     public function index()
 {
+    //This displays the appliances on the active schedule
     $data = ApplianceSchedule::whereHas('schedule', function ($query) {
         $query->where('is_active', 1)
               ->where('user_id', 1); // change this to auth()->id() later
     })->with(['appliance', 'schedule', 'timeslot'])->get();
 
+    // This displays the active schedule name
     $activeSchedule = Schedule::where('is_active', 1)
     ->where('user_id', 1)
     ->first();
 
+    // This is to display all available schedules 
     $schedules = Schedule::where('user_id', 1)->get(); // change this to auth()->id() later
+
+    // This is to display all available appliances 
+    $AllAppliances = Appliances::where('user_id', 1)->get(); // change this to auth()->id() later
+
     return view('schedule.index', [
         'appliances' => $data,
         'ActiveSchedule' => $activeSchedule,
-        'schedule' => $schedules
+        'schedule' => $schedules,
+        'AllAppliances' => $AllAppliances
     ]);
 }
 

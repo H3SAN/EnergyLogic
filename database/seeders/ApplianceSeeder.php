@@ -24,7 +24,7 @@ class ApplianceSeeder extends Seeder
 
         foreach ($appliances as $appliance) {
             DB::table('appliances')->insert([
-                'user_id' => rand(1, 5),
+                'user_id' => 1,//rand(1, 5),
                 'name' => $appliance,
                 'power_rating_watts' => rand(50, 3000),
                 'status' => $statuses[array_rand($statuses)],

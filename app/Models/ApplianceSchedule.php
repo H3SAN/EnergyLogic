@@ -9,12 +9,13 @@ class ApplianceSchedule extends Model
     protected $table = 'appliance_schedule';
 
     protected $fillable = [
-        'schedule_id',
         'appliance_id',
+        'schedule_id',
         'timeslot_id',
         'estimated_cost',
-        'duration'
+        'duration',
     ];
+    
 
     public function appliance()
     {
