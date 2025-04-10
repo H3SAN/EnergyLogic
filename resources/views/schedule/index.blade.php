@@ -107,7 +107,7 @@
                     @foreach($schedule as $data)
                     <tr>
                         <td>{{$data->name}}</td>
-                        <td><a href="{{route('schedule.seActvie')}}" class="btn btn-success btn-circle btn-sm">
+                        <td><a href="#" class="btn btn-success btn-circle btn-sm">
                             <i class="fas fa-check"></i>
                         </a></td>
                         </tr>
