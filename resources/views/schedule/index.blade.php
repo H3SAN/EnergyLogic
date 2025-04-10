@@ -107,9 +107,14 @@
                     @foreach($schedule as $data)
                     <tr>
                         <td>{{$data->name}}</td>
-                        <td><a href="#" class="btn btn-success btn-circle btn-sm">
-                            <i class="fas fa-check"></i>
-                        </a></td>
+                        <td><a href="{{ route('schedule.setActive', ['id' => $data->id]) }}"
+                            class="btn btn-circle btn-sm {{ $data->is_active ? 'btn-success' : 'btn-secondary' }}">
+                             <i class="fas fa-check"></i>
+                         </a>
+                        <a href="{{ route('schedule.delete', ['id' => $data->id])}}"  onclick="confirmation(event)" class="btn btn-danger btn-circle btn-sm">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </td>
                         </tr>
                         @endforeach
                   </tbody>

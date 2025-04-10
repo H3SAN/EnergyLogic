@@ -65,6 +65,36 @@ class ScheduleController extends Controller
     
         return redirect()->back()->with('success', 'Schedule optimized and saved!');
     }
+
+    public function setActive($id)
+    {
+    // Find the schedule first
+    $schedule = Schedule::findOrFail($id);
+    
+    // Get the user ID associated with that schedule
+    $userId = $schedule->user_id;
+
+    // Set all schedules for this user to inactive
+    Schedule::where('user_id', $userId)->update(['is_active' => 0]);
+
+    // Set the chosen schedule to active
+    $schedule->is_active = 1;
+    $schedule->save();
+
+    return redirect()->back()->with('success', 'Appliance deleted successfully!');
+    }
+    
+    public function delete($id)
+{
+    // Delete all appliance_schedule records linked to this schedule first
+    ApplianceSchedule::where('schedule_id', $id)->delete();
+
+    // Now delete the schedule itself
+    $schedule = Schedule::find($id);
+    $schedule?->delete(); // Just in case it's already null
+
+    return redirect()->back()->with('success', 'Schedule and related appliances deleted successfully!');
+}
     
     
     

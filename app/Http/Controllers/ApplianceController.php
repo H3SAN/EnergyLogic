@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Appliances;
+use App\Models\UsageRecord;
 
 class ApplianceController extends Controller
 {
@@ -49,8 +50,12 @@ class ApplianceController extends Controller
 
     public function delete($id)
     {
+         // Delete all usage records linked to this appliance first
+        UsageRecord::where('schedule_id', $id)->delete();
+
         $appliance = Appliances::find($id); // Find the appliance by ID
         $appliance->delete(); // Delete it
+        $appliance?->delete(); // Just in case it's already null
         return redirect()->back()->with('success', 'Appliance deleted successfully!');
     }
 }

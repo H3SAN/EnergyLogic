@@ -41,4 +41,6 @@ Route::get('/cost-analysis', [HomeController::class,'costanalysis']);
 Route::prefix('schedule')->group(function () {
     Route::get('/', [ScheduleController::class, 'index'])->name('schedule.index'); // route to schedule page
     Route::post('/add', [ScheduleController::class, 'addSchedule'])->name('schedule.add'); // add Schedule
+    Route::get('/delete/{id}', [ScheduleController::class, 'delete'])->name('schedule.delete'); // add Schedule
+    Route::get('/setActive/{id}', [ScheduleController::class, 'setActive'])->name('schedule.setActive'); // add Schedule
 });
