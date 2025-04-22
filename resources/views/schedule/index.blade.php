@@ -38,7 +38,7 @@
                         @if($data->schedule && $data->schedule->is_active)
                             <tr>
                                 <td>{{ $data->appliance->name ?? 'N/A' }}</td>
-                                <td>{{ $data->timeslot}}</td>
+                                <td>{{ $data->timeslot->name}}</td>
                                 <td>{{ $data->duration_minutes ?? 'N/A' }} Minutes</td>
                                 <td>{{ $data->estimated_cost ?? 'N/A' }}</td>
                                 {{-- <td>{{ \Carbon\Carbon::parse($data->appliance->schedule_time)->format('h:i A') ?? 'N/A' }}</td> --}}
@@ -61,7 +61,6 @@
           <div
               class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
               <h6 class="m-0 font-weight-bold text-primary">Energy Consumption Summary</h6>
-              
           </div>
           <!-- Card Body -->
           <div class="card-body">
@@ -196,14 +195,14 @@
           <div class="form-group">
             <label for="timeslot_${appliance.id}">Timeslot</label>
             <select class="form-control" id="timeslot_${appliance.id}" name="timeslots[${appliance.id}]">
-              <option value="00:00:00">12am - 3am</option>
-              <option value="03:00:00">3am - 6am</option>
-              <option value="06:00:00">6am - 9am</option>
-              <option value="12:00:00">9am - 12pm</option>
-              <option value="12:00:00">12pm - 3pm</option>
-              <option value="15:00:00">3pm - 6pm</option>
-              <option value="18:00:00">6pm - 9pm</option>
-              <option value="21:00:00">9pm - 12am</option>
+              <option value="1">12am - 3am</option>
+              <option value="2">3am - 6am</option>
+              <option value="3">6am - 9am</option>
+              <option value="4">9am - 12pm</option>
+              <option value="5">12pm - 3pm</option>
+              <option value="6">3pm - 6pm</option>
+              <option value="7">6pm - 9pm</option>
+              <option value="8">9pm - 12am</option>
             </select>
           </div>
   

@@ -11,7 +11,7 @@ return new class extends Migration {
             $table->string('name')->nullable();
             $table->string('start_time')->nullable();
             $table->string('end_time')->nullable();
-            $table->decimal('rate_per_kwh', 10, 4); // Cost per kWh
+            $table->decimal('cost_per_kwh', 10, 4); // Cost per kWh
             $table->timestamps();
         });
     }

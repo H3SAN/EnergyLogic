@@ -12,13 +12,14 @@ class CreateApplianceScheduleTable extends Migration
         $table->id();
         $table->unsignedBigInteger('schedule_id');
         $table->unsignedBigInteger('appliance_id');
-        $table->string('timeslot');
+        $table->unsignedBigInteger('timeslot_id');
         $table->integer('duration_minutes');
         $table->float('estimated_cost');
         $table->timestamps();
 
         $table->foreign('schedule_id')->references('id')->on('schedules')->onDelete('cascade');
         $table->foreign('appliance_id')->references('id')->on('appliances')->onDelete('cascade');
+        $table->foreign('timeslot_id')->references('id')->on('timeslots')->onDelete('cascade');
     });
 }
 

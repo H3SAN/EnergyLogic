@@ -8,6 +8,7 @@ use App\Models\ApplianceSchedule;
 use App\Models\Schedule;
 use Illuminate\Http\Request;
 use App\Services\ScheduleOptimizer;
+use App\Models\Timeslot;
 
 class ScheduleController extends Controller
 {
@@ -59,14 +60,18 @@ public function addSchedule(Request $request)
 
     // Attach appliances with timeslot and duration
     foreach ($validated['appliances'] as $applianceId) {
-        $cost = $this->calculateEstimatedCost($applianceId, $validated['durations'][$applianceId]);
+        $timeslotId = $validated['timeslots'][$applianceId];
+        $durationMinutes = $validated['durations'][$applianceId];
+    
+        $cost = $this->calculateEstimatedCost($applianceId, $durationMinutes, $timeslotId);
     
         $schedule->appliances()->attach($applianceId, [
-            'timeslot' => $validated['timeslots'][$applianceId],
-            'duration_minutes' => $validated['durations'][$applianceId],
+            'timeslot_id' => $timeslotId,
+            'duration_minutes' => $durationMinutes,
             'estimated_cost' => $cost,
         ]);
     }
+    
     
 
     return redirect()->route('schedule.index')->with('success', 'Schedule created successfully!');
@@ -137,28 +142,30 @@ public function addSchedule(Request $request)
  * @param int $durationMinutes
  * @return float
  */
-private function calculateEstimatedCost($applianceId, $durationMinutes)
+private function calculateEstimatedCost($applianceId, $durationMinutes, $timeslotId)
 {
-    // Get the appliance info
     $appliance = Appliances::find($applianceId);
+    $timeslot = Timeslot::find($timeslotId);
 
-    if (!$appliance) {
-        return 0; // or throw an exception
+    // Fallback if either is missing
+    if (!$appliance || !$timeslot) {
+        return 0;
     }
 
-    $powerRating = $powerRating = $appliance->power_rating_watts / 1000; // W to kW
-    $costPerKwh = 0.20; // or fetch from config/settings
-
-    // Convert duration to hours
+    $powerRating = $appliance->power_rating_watts; // in W or kW
+    $costPerKwh = $timeslot->cost_per_kwh;
     $durationHours = $durationMinutes / 60;
 
-    // Calculate energy consumed in kWh
-    $energyConsumed = $powerRating * $durationHours;
+    // If stored in W, convert to kW
+    if ($powerRating > 10) { // crude check
+        $powerRating = $powerRating / 1000;
+    }
 
-    // Calculate cost
+    $energyConsumed = $powerRating * $durationHours;
     $estimatedCost = $energyConsumed * $costPerKwh;
 
-    return round($estimatedCost, 2); // rounded to 2 decimal places
+    return round($estimatedCost, 2);
 }
+
 
 }
