@@ -36,6 +36,14 @@ class TimeslotSeeder extends Seeder
             [
                 'name' => '06:00:00',
                 'start_time' => '06:00:00',
+                'end_time' => '09:00:00',
+                'rate_per_kwh' => 0.12,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => '09:00:00',
+                'start_time' => '09:00:00',
                 'end_time' => '12:00:00',
                 'rate_per_kwh' => 0.12,
                 'created_at' => now(),

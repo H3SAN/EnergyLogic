@@ -7,17 +7,21 @@ use Illuminate\Support\Facades\Schema;
 class CreateApplianceScheduleTable extends Migration
 {
     public function up()
-    {
-        Schema::create('appliance_schedule', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('schedule_id')->constrained()->onDelete('cascade');
-            $table->foreignId('appliance_id')->constrained()->onDelete('cascade');
-            $table->integer('timeslot_id');
-            $table->decimal('estimated_cost', 8, 2)->nullable();
-            $table->float('duration')->default(1);
-            $table->timestamps();
-        });
-    }
+{
+    Schema::create('appliance_schedule', function (Blueprint $table) {
+        $table->id();
+        $table->unsignedBigInteger('schedule_id');
+        $table->unsignedBigInteger('appliance_id');
+        $table->string('timeslot');
+        $table->integer('duration_minutes');
+        $table->float('estimated_cost');
+        $table->timestamps();
+
+        $table->foreign('schedule_id')->references('id')->on('schedules')->onDelete('cascade');
+        $table->foreign('appliance_id')->references('id')->on('appliances')->onDelete('cascade');
+    });
+}
+
 
     public function down()
     {

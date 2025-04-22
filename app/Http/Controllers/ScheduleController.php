@@ -15,8 +15,7 @@ class ScheduleController extends Controller
 {
     //This displays the appliances on the active schedule
     $data = ApplianceSchedule::whereHas('schedule', function ($query) {
-        $query->where('is_active', 1)
-              ->where('user_id', 1); // change this to auth()->id() later
+        $query->where('is_active', 1);
     })->with(['appliance', 'schedule', 'timeslot'])->get();
 
     // This displays the active schedule name
@@ -38,33 +37,69 @@ class ScheduleController extends Controller
     ]);
 }
 
-    public function addSchedule(Request $request)
-    {
-        // dd($request->all());
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'appliances' => 'required|array',
-            'appliances.*' => 'exists:appliances,id',
-            'is_active' => 'nullable|boolean',
-        ]);
-    
+public function addSchedule(Request $request)
+{
+    // Validate input
+    // dd($request->all());
+    $validated = $request->validate([
+        'name' => 'required|string|max:255',
+        'appliances' => 'required|array',
+        'appliances.*' => 'exists:appliances,id',
+        'timeslots' => 'required|array',
+        'durations' => 'required|array',
+    ]);
         $isActive = $request->has('is_active') ? 1 : 0;
-        $userId = 1; // Replace with auth()->id() when ready
+
+    // Create Schedule
+    $schedule = Schedule::create([
+        'name' => $validated['name'],
+        'is_active' => $isActive,
+        'user_id' => 1 // auth()->id()
+    ]);
+
+    // Attach appliances with timeslot and duration
+    foreach ($validated['appliances'] as $applianceId) {
+        $cost = $this->calculateEstimatedCost($applianceId, $validated['durations'][$applianceId]);
     
-        // Step 1: Run optimization
-        $optimizer = new ScheduleOptimizer();
-        $schedule = $optimizer->optimize($validated['appliances'], $userId);
-    
-        // Step 2: Update schedule metadata
-        $schedule->name = $request->input('name');
-        $schedule->user_id = $userId;
-        // $schedule->description = $request->input('desc');
-        $schedule->is_active = $isActive;
-        $schedule->save();
-    
-        return redirect()->back()->with('success', 'Schedule optimized and saved!');
+        $schedule->appliances()->attach($applianceId, [
+            'timeslot' => $validated['timeslots'][$applianceId],
+            'duration_minutes' => $validated['durations'][$applianceId],
+            'estimated_cost' => $cost,
+        ]);
     }
+    
+
+    return redirect()->route('schedule.index')->with('success', 'Schedule created successfully!');
+}
+
+// public function addSchedule(Request $request)
+//     {
+//         // dd($request->all());
+//         $validated = $request->validate([
+//             'name' => 'required|string|max:255',
+//             'description' => 'nullable|string',
+//             'appliances' => 'required|array',
+//             'appliances.*' => 'exists:appliances,id',
+//             'is_active' => 'nullable|boolean',
+//         ]);
+    
+//         $isActive = $request->has('is_active') ? 1 : 0;
+//         $userId = 1; // Replace with auth()->id() when ready
+    
+//         // Step 1: Run optimization
+//         $optimizer = new ScheduleOptimizer();
+//         $schedule = $optimizer->optimize($validated['appliances'], $userId);
+    
+//         // Step 2: Update schedule metadata
+//         $schedule->name = $request->input('name');
+//         $schedule->user_id = $userId;
+//         // $schedule->description = $request->input('desc');
+//         $schedule->is_active = $isActive;
+//         $schedule->save();
+    
+//         return redirect()->back()->with('success', 'Schedule optimized and saved!');
+//     }
+
 
     public function setActive($id)
     {
@@ -95,7 +130,35 @@ class ScheduleController extends Controller
 
     return redirect()->back()->with('success', 'Schedule and related appliances deleted successfully!');
 }
-    
-    
-    
+/**
+ * Calculate the estimated cost of running an appliance.
+ *
+ * @param int $applianceId
+ * @param int $durationMinutes
+ * @return float
+ */
+private function calculateEstimatedCost($applianceId, $durationMinutes)
+{
+    // Get the appliance info
+    $appliance = Appliances::find($applianceId);
+
+    if (!$appliance) {
+        return 0; // or throw an exception
+    }
+
+    $powerRating = $powerRating = $appliance->power_rating_watts / 1000; // W to kW
+    $costPerKwh = 0.20; // or fetch from config/settings
+
+    // Convert duration to hours
+    $durationHours = $durationMinutes / 60;
+
+    // Calculate energy consumed in kWh
+    $energyConsumed = $powerRating * $durationHours;
+
+    // Calculate cost
+    $estimatedCost = $energyConsumed * $costPerKwh;
+
+    return round($estimatedCost, 2); // rounded to 2 decimal places
+}
+
 }

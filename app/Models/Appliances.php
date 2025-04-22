@@ -18,9 +18,13 @@ class Appliances extends Model
 
     protected $fillable = ['user_id', 'name', 'power_rating_watts', 'status'];
 
-    public function schedules() {
-        return $this->belongsToMany(Schedule::class, 'appliance_schedule');
+    public function schedules()
+    {
+        return $this->belongsToMany(Schedule::class, 'appliance_schedule')
+                    ->withPivot('timeslot', 'duration_minutes')
+                    ->withTimestamps();
     }
+    
     /**
      * The attributes that should be cast.
      *

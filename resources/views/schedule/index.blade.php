@@ -38,8 +38,8 @@
                         @if($data->schedule && $data->schedule->is_active)
                             <tr>
                                 <td>{{ $data->appliance->name ?? 'N/A' }}</td>
-                                <td>{{ $data->timeslot->name}}</td>
-                                <td>{{ $data->duration ?? 'N/A' }} hours</td>
+                                <td>{{ $data->timeslot}}</td>
+                                <td>{{ $data->duration_minutes ?? 'N/A' }} Minutes</td>
                                 <td>{{ $data->estimated_cost ?? 'N/A' }}</td>
                                 {{-- <td>{{ \Carbon\Carbon::parse($data->appliance->schedule_time)->format('h:i A') ?? 'N/A' }}</td> --}}
                             </tr>
@@ -149,11 +149,13 @@
                 <div class="form-group">
                     <label for="appliances">Select Appliances</label>
                     <select class="form-control" id="appliances" name="appliances[]" multiple required>
-                        @foreach($AllAppliances as $allappliance)
-                            <option value="{{ $allappliance->id }}">{{ $allappliance->name }} ({{ $allappliance->power_rating_watts }} W)</option>
-                        @endforeach
+                      @foreach($AllAppliances as $allappliance)
+                        <option value="{{ $allappliance->id }}">{{ $allappliance->name }} ({{ $allappliance->power_rating_watts }} W)</option>
+                      @endforeach
                     </select>
-                </div>
+                  </div>
+                  
+                  <div id="applianceScheduleOptions"></div>
             
                 <!-- Set Active Checkbox -->
                 <div class="form-group">
@@ -175,4 +177,43 @@
     </div>
 </div>
 </div>
+<script> document.getElementById('appliances').addEventListener('change', function() {
+    let selectedAppliances = Array.from(this.selectedOptions).map(option => {
+      return {
+        id: option.value,
+        name: option.text
+      };
+    });
+  
+    let container = document.getElementById('applianceScheduleOptions');
+    container.innerHTML = ''; // Clear previous content
+  
+    selectedAppliances.forEach(appliance => {
+      container.innerHTML += `
+        <div class="card mb-2 p-2">
+          <h5>${appliance.name}</h5>
+  
+          <div class="form-group">
+            <label for="timeslot_${appliance.id}">Timeslot</label>
+            <select class="form-control" id="timeslot_${appliance.id}" name="timeslots[${appliance.id}]">
+              <option value="00:00:00">12am - 3am</option>
+              <option value="03:00:00">3am - 6am</option>
+              <option value="06:00:00">6am - 9am</option>
+              <option value="12:00:00">9am - 12pm</option>
+              <option value="12:00:00">12pm - 3pm</option>
+              <option value="15:00:00">3pm - 6pm</option>
+              <option value="18:00:00">6pm - 9pm</option>
+              <option value="21:00:00">9pm - 12am</option>
+            </select>
+          </div>
+  
+          <div class="form-group">
+            <label for="duration_${appliance.id}">Duration (minutes)</label>
+            <input type="number" class="form-control" id="duration_${appliance.id}" name="durations[${appliance.id}]" min="1" max="180" value="60" required>
+          </div>
+        </div>
+      `;
+    });
+  });
+  </script>
 @endsection

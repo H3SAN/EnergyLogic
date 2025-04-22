@@ -14,8 +14,12 @@ class Schedule extends Model
         return $this->hasMany(ApplianceSchedule::class);
     }
 
-    public function appliances() {
-        return $this->belongsToMany(Appliances::class, 'appliance_schedule','schedule_id', 'appliance_id');
-    }
+    public function appliances()
+{
+    return $this->belongsToMany(Appliances::class, 'appliance_schedule','schedule_id', 'appliance_id')
+                ->withPivot('timeslot', 'duration_minutes')
+                ->withTimestamps();
+}
+
 }
 
