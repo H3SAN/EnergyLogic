@@ -28,13 +28,13 @@ function number_format(number, decimals, dec_point, thousands_sep) {
 }
 
 // Area Chart Example
-var ctx = document.getElementById("myAreaChart");
+var ctx = document.getElementById("chartArea");
 var myLineChart = new Chart(ctx, {
   type: 'line',
   data: {
     labels: ["00:00:00", "03:00:00", "06:00:00", "09:00:00", "12:00:00", "15:00:00", "18:00:00", "21:00:00"],
     datasets: [{
-      label: "power",
+      label: "Earnings",
       lineTension: 0.3,
       backgroundColor: "rgba(78, 115, 223, 0.05)",
       borderColor: "rgba(78, 115, 223, 1)",
@@ -46,7 +46,7 @@ var myLineChart = new Chart(ctx, {
       pointHoverBorderColor: "rgba(78, 115, 223, 1)",
       pointHitRadius: 10,
       pointBorderWidth: 2,
-      data: [0, 7.9, 3.4, 2.6, 8.1, 4.2, 6.5, 8.5],
+      data: [0, 10000, 5000, 15000, 10000, 20000, 15000, 25000, 20000, 30000, 25000, 40000],
     }],
   },
   options: {
@@ -78,8 +78,7 @@ var myLineChart = new Chart(ctx, {
           padding: 10,
           // Include a dollar sign in the ticks
           callback: function(value, index, values) {
-            // return '$' + number_format(value);
-            return value;
+            return '$' + number_format(value);
           }
         },
         gridLines: {
@@ -111,8 +110,7 @@ var myLineChart = new Chart(ctx, {
       callbacks: {
         label: function(tooltipItem, chart) {
           var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-          // return datasetLabel + ': $' + number_format(tooltipItem.yLabel);
-          return datasetLabel + ": " + tooltipItem.yLabel;
+          return datasetLabel + ': $' + number_format(tooltipItem.yLabel);
         }
       }
     }

@@ -215,4 +215,5 @@
     });
   });
   </script>
+  <script src="js/charts/chart-area.js"></script>
 @endsection
