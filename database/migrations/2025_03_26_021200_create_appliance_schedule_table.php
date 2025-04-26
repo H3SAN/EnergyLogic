@@ -7,21 +7,22 @@ use Illuminate\Support\Facades\Schema;
 class CreateApplianceScheduleTable extends Migration
 {
     public function up()
-{
-    Schema::create('appliance_schedule', function (Blueprint $table) {
-        $table->id();
-        $table->unsignedBigInteger('schedule_id');
-        $table->unsignedBigInteger('appliance_id');
-        $table->unsignedBigInteger('timeslot_id');
-        $table->integer('duration_minutes');
-        $table->float('estimated_cost');
-        $table->timestamps();
-
-        $table->foreign('schedule_id')->references('id')->on('schedules')->onDelete('cascade');
-        $table->foreign('appliance_id')->references('id')->on('appliances')->onDelete('cascade');
-        $table->foreign('timeslot_id')->references('id')->on('timeslots')->onDelete('cascade');
-    });
-}
+    {
+        Schema::create('appliance_schedule', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('schedule_id');
+            $table->unsignedBigInteger('appliance_id');
+            $table->time('start_time'); // new start time column
+            $table->time('end_time');   // new end time column
+            $table->integer('duration_minutes');
+            $table->float('estimated_cost');
+            $table->timestamps();
+    
+            $table->foreign('schedule_id')->references('id')->on('schedules')->onDelete('cascade');
+            $table->foreign('appliance_id')->references('id')->on('appliances')->onDelete('cascade');
+        });
+    }
+    
 
 
     public function down()

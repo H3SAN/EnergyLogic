@@ -26,7 +26,7 @@ class ApplianceSeeder extends Seeder
             DB::table('appliances')->insert([
                 'user_id' => 1,//rand(1, 5),
                 'name' => $appliance,
-                'power_rating_watts' => rand(50, 3000),
+                'power_consumption' => rand(50, 3000),
                 'status' => $statuses[array_rand($statuses)],
                 'schedule_time' => Carbon::createFromTime(rand(0, 23), rand(0, 59))->format('H:i:s'),
                 'daily_usage_hours' => round(rand(10, 200) / 10, 2), // e.g., 1.0 to 20.0 hours

@@ -45,13 +45,13 @@
                     @foreach($data as $data)
                     <tr>
                         <td>{{$data->name}}</td>
-                        <td>{{$data->power_rating_watts}}</td>
+                        <td>{{$data->power_consumption}}</td>
                         <td>{{$data->status}}</td>
                         <td>{{$data->schedule_time}}</td>
                         <td>{{$data->daily_usage_hours}}</td>
                         <td>{{$data->energy_efficiency_rating}}</td>
                         <td>
-                            <a href="{{ url('appliances.show')}}" class="btn btn-primary btn-circle btn-sm">
+                            <a href="{{ route('appliances.view', ['id' => $data->id])}}" class="btn btn-primary btn-circle btn-sm">
                                 <i class="fas fa-eye"></i>
                             </a>
                             <a href="{{ route('appliances.delete', ['id' => $data->id])}}"  onclick="confirmation(event)" class="btn btn-danger btn-circle btn-sm">
@@ -85,7 +85,7 @@
 
                     <div class="form-group">
                         <label for="powerRating">Power Rating (Watts)</label>
-                        <input type="number" class="form-control" id="powerRating" name="power_rating_watts" placeholder="Enter power rating in watts" min="1" required>
+                        <input type="number" class="form-control" id="powerRating" name="power_consumption" placeholder="Enter power rating in watts" min="1" required>
                     </div>
 
                     <div class="form-group">

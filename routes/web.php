@@ -28,7 +28,7 @@ route::get('admin/dashboard', [HomeController::class,'index'])->middleware(['aut
 Route::middleware(['auth'])->group(function () {
     Route::prefix('appliances')->group(function () {
         Route::get('/', [ApplianceController::class, 'index'])->name('appliances.index'); // List all appliances
-        Route::get('/view', [ApplianceController::class, 'show'])->name('appliances.show'); // View appliance details
+        Route::get('/view/{id}', [ApplianceController::class, 'view'])->name('appliances.view'); // View appliance details
         Route::post('/add', [ApplianceController::class, 'add'])->name('appliances.add'); // Add appliance
         Route::get('/delete/{id}', [ApplianceController::class, 'delete'])->name('appliances.delete'); // Delete appliance
     });

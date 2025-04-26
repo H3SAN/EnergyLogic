@@ -9,6 +9,7 @@ use App\Models\Schedule;
 use Illuminate\Http\Request;
 use App\Services\ScheduleOptimizer;
 use App\Models\Timeslot;
+use Carbon\Carbon;
 
 class ScheduleController extends Controller
 {
@@ -47,35 +48,34 @@ public function addSchedule(Request $request)
         'appliances' => 'required|array',
         'appliances.*' => 'exists:appliances,id',
         'timeslots' => 'required|array',
-        'durations' => 'required|array',
+        'timeslots.*.duration' => 'required|integer|min:1',
     ]);
-        $isActive = $request->has('is_active') ? 1 : 0;
+
+    $isActive = $request->has('is_active') ? 1 : 0;
 
     // Create Schedule
     $schedule = Schedule::create([
         'name' => $validated['name'],
         'is_active' => $isActive,
-        'user_id' => 1 // auth()->id()
+        'user_id' => 1, // Replace with auth()->id() in production
     ]);
 
-    // Attach appliances with timeslot and duration
+    // Attach appliances with duration
     foreach ($validated['appliances'] as $applianceId) {
-        $timeslotId = $validated['timeslots'][$applianceId];
-        $durationMinutes = $validated['durations'][$applianceId];
-    
-        $cost = $this->calculateEstimatedCost($applianceId, $durationMinutes, $timeslotId);
-    
+        $durationMinutes = $validated['timeslots'][$applianceId]['duration'];
+
+        // Optional: You could estimate cost based on duration alone
+        $cost = $this->calculateEstimatedCost($applianceId, $durationMinutes);
+
         $schedule->appliances()->attach($applianceId, [
-            'timeslot_id' => $timeslotId,
             'duration_minutes' => $durationMinutes,
             'estimated_cost' => $cost,
         ]);
     }
-    
-    
 
     return redirect()->route('schedule.index')->with('success', 'Schedule created successfully!');
 }
+
 
 // public function addSchedule(Request $request)
 //     {
@@ -135,37 +135,4 @@ public function addSchedule(Request $request)
 
     return redirect()->back()->with('success', 'Schedule and related appliances deleted successfully!');
 }
-/**
- * Calculate the estimated cost of running an appliance.
- *
- * @param int $applianceId
- * @param int $durationMinutes
- * @return float
- */
-private function calculateEstimatedCost($applianceId, $durationMinutes, $timeslotId)
-{
-    $appliance = Appliances::find($applianceId);
-    $timeslot = Timeslot::find($timeslotId);
-
-    // Fallback if either is missing
-    if (!$appliance || !$timeslot) {
-        return 0;
-    }
-
-    $powerRating = $appliance->power_rating_watts; // in W or kW
-    $costPerKwh = $timeslot->cost_per_kwh;
-    $durationHours = $durationMinutes / 60;
-
-    // If stored in W, convert to kW
-    if ($powerRating > 10) { // crude check
-        $powerRating = $powerRating / 1000;
-    }
-
-    $energyConsumed = $powerRating * $durationHours;
-    $estimatedCost = $energyConsumed * $costPerKwh;
-
-    return round($estimatedCost, 2);
-}
-
-
 }

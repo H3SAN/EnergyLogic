@@ -16,17 +16,21 @@ class ApplianceController extends Controller
         return view('appliances.apptable', compact('data'));
     }
 
-    public function show()
-    {
-        return view('appliances.appdetails');
-    }
+    public function view($id)
+{
+    // Search for the record by ID
+    $appliance = Appliances::findOrFail($id); // This throws a 404 if not found
+
+    // Pass the appliance data to a view
+    return view('appliances.appdetails', ['appliance' => $appliance]);
+}
 
     public function add(Request $request)
     {
         // Validate incoming request
         $request->validate([
             'name' => 'required|string|max:255',
-            'power_rating_watts' => 'required|numeric|min:1',
+            'power_consumption' => 'required|numeric|min:1',
             'status' => 'required|in:on,off,standby',
             'schedule_time' => 'nullable|date_format:H:i:s',
             'daily_usage_hours' => 'required|numeric|min:0|max:24',
@@ -36,7 +40,7 @@ class ApplianceController extends Controller
         // Create and save the appliance
         $appliance = new Appliances();
         $appliance->name = $request->name;
-        $appliance->power_rating_watts = $request->power_rating_watts;
+        $appliance->power_consumption = $request->power_consumption;
         $appliance->status = $request->status;
         $appliance->schedule_time = $request->schedule_time ?? null;
         $appliance->daily_usage_hours = $request->daily_usage_hours;

@@ -12,6 +12,8 @@ class ApplianceSchedule extends Model
         'appliance_id',
         'schedule_id',
         'timeslot_id',
+        'start_time',
+        'end_time',
         'estimated_cost',
         'duration',
     ];

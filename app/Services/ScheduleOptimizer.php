@@ -12,7 +12,7 @@ class ScheduleOptimizer
         $appliances = Appliances::whereIn('id', $applianceIds)->get();
 
         $appliances = $appliances->sortByDesc(function ($a) {
-            return $a->power_rating_watts * $a->daily_usage_hours;
+            return $a->power_consumption * $a->daily_usage_hours;
         });
 
         // Keep original Eloquent models and add temp property

@@ -16,7 +16,7 @@ class Appliances extends Model
      */
     protected $table = 'appliances';
 
-    protected $fillable = ['user_id', 'name', 'power_rating_watts', 'status'];
+    protected $fillable = ['user_id', 'name', 'power_consumption', 'status'];
 
     public function schedules()
     {
@@ -31,7 +31,7 @@ class Appliances extends Model
      * @var array
      */
     protected $casts = [
-        'power_rating_watts' => 'decimal:2',
+        'power_consumption' => 'decimal:2',
         'daily_usage_hours' => 'decimal:2',
         'schedule_time' => 'datetime:H:i:s',
         'last_used' => 'datetime',
