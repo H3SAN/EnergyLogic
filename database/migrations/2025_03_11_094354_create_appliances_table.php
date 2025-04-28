@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->id();
             $table->integer('user_id');
             $table->string('name');
-            $table->decimal('', 10, 2);
+            $table->decimal('power_consumption', 10, 2);
             $table->enum('status', ['on', 'off', 'standby'])->default('on'); 
             $table->enum('energy_efficiency_rating', ['A++', 'A+', 'A', 'B', 'C', 'D', 'E'])->default('A');
             $table->timestamps();

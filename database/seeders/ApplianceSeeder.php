@@ -28,9 +28,6 @@ class ApplianceSeeder extends Seeder
                 'name' => $appliance,
                 'power_consumption' => rand(50, 3000),
                 'status' => $statuses[array_rand($statuses)],
-                'schedule_time' => Carbon::createFromTime(rand(0, 23), rand(0, 59))->format('H:i:s'),
-                'daily_usage_hours' => round(rand(10, 200) / 10, 2), // e.g., 1.0 to 20.0 hours
-                'duration' => round(rand(10, 30) / 10, 1), // e.g., 1.0 to 3.0 hours
                 'energy_efficiency_rating' => $ratings[array_rand($ratings)],
                 'created_at' => now(),
                 'updated_at' => now(),

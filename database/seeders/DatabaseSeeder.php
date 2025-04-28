@@ -22,8 +22,7 @@ class DatabaseSeeder extends Seeder
         ]);
         
         $this->call([
-            ApplianceSeeder::class,
-            TimeslotSeeder::class
+            ApplianceSeeder::class
         ]);
     }
 }

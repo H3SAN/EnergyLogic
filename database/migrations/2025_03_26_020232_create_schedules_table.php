@@ -12,7 +12,8 @@ class CreateSchedulesTable extends Migration
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
             $table->string('name')->nullable();
-            // $table->string('description')->nullable();
+            $table->time('start_time'); // new start time column
+            $table->time('end_time');   // new end time column
             $table->boolean('is_active')->default(0);
             $table->timestamps();
         });

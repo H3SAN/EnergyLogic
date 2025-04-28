@@ -11,7 +11,6 @@ class ApplianceSchedule extends Model
     protected $fillable = [
         'appliance_id',
         'schedule_id',
-        'timeslot_id',
         'start_time',
         'end_time',
         'estimated_cost',
@@ -23,12 +22,6 @@ class ApplianceSchedule extends Model
     {
         return $this->belongsTo(Appliances::class);
     }
-
-    public function timeslot()
-    {
-        return $this->belongsTo(Timeslot::class);
-    }
-
     public function schedule()
     {
         return $this->belongsTo(Schedule::class);

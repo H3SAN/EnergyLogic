@@ -21,7 +21,7 @@ class Appliances extends Model
     public function schedules()
     {
         return $this->belongsToMany(Schedule::class, 'appliance_schedule')
-                    ->withPivot('timeslot', 'duration_minutes')
+                    ->withPivot('start_time', 'end_time', 'duration_minutes')
                     ->withTimestamps();
     }
     

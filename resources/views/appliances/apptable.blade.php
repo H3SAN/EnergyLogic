@@ -24,8 +24,6 @@
                           <th>Name</th>
                           <th>Power Rating</th>
                           <th>Status</th>
-                          <th>Schedule time</th>
-                          <th>Daily usage</th>
                           <th>Efficiency Rating</th>
                           <th>Action</th>
                       </tr>
@@ -35,8 +33,6 @@
                         <th>Name</th>
                         <th>Power Rating</th>
                         <th>Status</th>
-                        <th>Schedule time</th>
-                        <th>Daily usage</th>
                         <th>Efficiency Rating</th>
                         <th>Action</th>
                     </tr>
@@ -47,8 +43,6 @@
                         <td>{{$data->name}}</td>
                         <td>{{$data->power_consumption}}</td>
                         <td>{{$data->status}}</td>
-                        <td>{{$data->schedule_time}}</td>
-                        <td>{{$data->daily_usage_hours}}</td>
                         <td>{{$data->energy_efficiency_rating}}</td>
                         <td>
                             <a href="{{ route('appliances.view', ['id' => $data->id])}}" class="btn btn-primary btn-circle btn-sm">
