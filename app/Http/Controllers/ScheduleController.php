@@ -40,8 +40,6 @@ class ScheduleController extends Controller
 
 public function addSchedule(Request $request)
 {
-    // Validate input
-    //dd($request->all());
     $validated = $request->validate([
         'name' => 'required|string|max:255',
         'start_time' => 'required|date_format:H:i',
@@ -54,30 +52,51 @@ public function addSchedule(Request $request)
 
     $isActive = $request->has('is_active') ? 1 : 0;
 
-// Create the Schedule
-$schedule = Schedule::create([
-    'name' => $validated['name'],
-    'is_active' => $isActive,
-    'user_id' => 1, // Use auth()->id() in real use
-    'start_time' => $validated['start_time'],
-    'end_time' => $validated['end_time'],
-]);
-
-
-// Attach Appliances
-foreach ($validated['appliances'] as $applianceId) {
-    $durationMinutes = $validated['timeslots'][$applianceId]['duration'];
-
-    $cost = $this->calculateEstimatedCost($applianceId, $durationMinutes);
-
-    $schedule->appliances()->attach($applianceId, [
-        'duration_minutes' => $durationMinutes,
-        'estimated_cost' => $cost,
+    // Create the schedule
+    $schedule = Schedule::create([
+        'name' => $validated['name'],
+        'is_active' => $isActive,
+        'user_id' => 1, // Replace with auth()->id() in production
         'start_time' => $validated['start_time'],
         'end_time' => $validated['end_time'],
     ]);
-}
+
+    // Convert schedule times to Carbon for calculations
+    $scheduleStart = Carbon::parse($validated['start_time']);
+    $scheduleEnd = Carbon::parse($validated['end_time']);
+
+    foreach ($validated['appliances'] as $applianceId) {
+        $duration = (int) $validated['timeslots'][$applianceId]['duration'];
+
+        // Calculate latest possible start time to fit within schedule
+        $latestStart = $scheduleEnd->copy()->subMinutes($duration);
+
+        // Generate random start time within range
+        $randomStart = $this->randomTimeBetween($scheduleStart, $latestStart);
+        $randomEnd = $randomStart->copy()->addMinutes($duration);
+
+        $cost = $this->calculateEstimatedCost($applianceId, $duration);
+
+        $schedule->appliances()->attach($applianceId, [
+            'duration_minutes' => $duration,
+            'estimated_cost' => $cost,
+            'start_time' => $randomStart->format('H:i'),
+            'end_time' => $randomEnd->format('H:i'),
+        ]);
+    }
+
     return redirect()->route('schedule.index')->with('success', 'Schedule created successfully!');
+}
+
+// Helper function to get a random Carbon time between two Carbon instances
+private function randomTimeBetween(Carbon $start, Carbon $end): Carbon
+{
+    $startMinutes = $start->diffInMinutes(Carbon::createFromTime(0, 0), false) * -1;
+    $endMinutes = $end->diffInMinutes(Carbon::createFromTime(0, 0), false) * -1;
+
+    $randomMinute = rand($startMinutes, $endMinutes);
+
+    return Carbon::createFromTime(0, 0)->addMinutes($randomMinute);
 }
 
     public function setActive($id)
