@@ -32,7 +32,7 @@ var ctx = document.getElementById("myAreaChart");
 var myLineChart = new Chart(ctx, {
   type: 'line',
   data: {
-    labels: ["00:00:00", "03:00:00", "06:00:00", "09:00:00", "12:00:00", "15:00:00", "18:00:00", "21:00:00"],
+    labels: ["00:00:00", "06:00:00", "10:00:00", "17:00:00", "21:00:00"],
     datasets: [{
       label: "power",
       lineTension: 0.3,
@@ -46,7 +46,7 @@ var myLineChart = new Chart(ctx, {
       pointHoverBorderColor: "rgba(78, 115, 223, 1)",
       pointHitRadius: 10,
       pointBorderWidth: 2,
-      data: [0, 7.9, 3.4, 2.6, 8.1, 4.2, 6.5, 8.5],
+      data: [0.15, 0.5, 0.3, 0.4, 0.2],
     }],
   },
   options: {
