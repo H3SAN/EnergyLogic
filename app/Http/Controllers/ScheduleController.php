@@ -9,6 +9,7 @@ use App\Models\Schedule;
 use Illuminate\Http\Request;
 use App\Services\ScheduleOptimizer;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class ScheduleController extends Controller
 {
@@ -52,41 +53,49 @@ public function addSchedule(Request $request)
 
     $isActive = $request->has('is_active') ? 1 : 0;
 
-    // Create the schedule
+    // Make other schedules inactive if needed
+    if ($isActive) {
+        Schedule::where('user_id', 1)->update(['is_active' => 0]);
+    }
+
     $schedule = Schedule::create([
         'name' => $validated['name'],
         'is_active' => $isActive,
-        'user_id' => 1, // Replace with auth()->id() in production
+        'user_id' => 1, // replace with auth()->id()
         'start_time' => $validated['start_time'],
         'end_time' => $validated['end_time'],
     ]);
 
-    // Convert schedule times to Carbon for calculations
     $scheduleStart = Carbon::parse($validated['start_time']);
     $scheduleEnd = Carbon::parse($validated['end_time']);
 
     foreach ($validated['appliances'] as $applianceId) {
         $duration = (int) $validated['timeslots'][$applianceId]['duration'];
 
-        // Calculate latest possible start time to fit within schedule
-        $latestStart = $scheduleEnd->copy()->subMinutes($duration);
+        // Use dynamic optimizer for power-hungry appliances
+        $appliance = Appliances::find($applianceId);
+        $isHeavy = $appliance->power_consumption > 1500; // Example threshold
 
-        // Generate random start time within range
-        $randomStart = $this->randomTimeBetween($scheduleStart, $latestStart);
-        $randomEnd = $randomStart->copy()->addMinutes($duration);
+        if ($isHeavy) {
+            $startTime = $this->findCheapestTimeSlot($scheduleStart, $scheduleEnd, $duration);
+        } else {
+            $startTime = $this->randomTimeBetween($scheduleStart, $scheduleEnd->copy()->subMinutes($duration));
+        }
 
-        $cost = $this->calculateEstimatedCost($applianceId, $duration);
+        $endTime = $startTime->copy()->addMinutes($duration);
+        $cost = $this->calculateEstimatedCost($applianceId, $duration, $startTime);
 
         $schedule->appliances()->attach($applianceId, [
             'duration_minutes' => $duration,
             'estimated_cost' => $cost,
-            'start_time' => $randomStart->format('H:i'),
-            'end_time' => $randomEnd->format('H:i'),
+            'start_time' => $startTime->format('H:i'),
+            'end_time' => $endTime->format('H:i'),
         ]);
     }
 
     return redirect()->route('schedule.index')->with('success', 'Schedule created successfully!');
 }
+
 
 // Helper function to get a random Carbon time between two Carbon instances
 private function randomTimeBetween(Carbon $start, Carbon $end): Carbon
@@ -128,31 +137,61 @@ private function randomTimeBetween(Carbon $start, Carbon $end): Carbon
 
     return redirect()->back()->with('success', 'Schedule and related appliances deleted successfully!');
 }
-private function calculateEstimatedCost($applianceId, $durationMinutes)
+protected function deactivateOtherSchedules($userId)
 {
-    // Fixed cost per hour
-    $costPerHour = 0.2;
+    $query = Schedule::where('user_id', $userId)->where('is_active', 1);
 
+    $query->update(['is_active' => 0]);
+}
+
+private function getCostPerHour(Carbon $time)
+{
+    $slot = DB::table('timeslot_costs')
+        ->where('start_time', '<=', $time->format('H:i:s'))
+        ->where('end_time', '>', $time->format('H:i:s'))
+        ->first();
+
+    return $slot ? (float) $slot->cost_per_kwh : 0.2; // fallback default
+}
+
+
+private function calculateEstimatedCost($applianceId, $durationMinutes, Carbon $startTime)
+{
     // Get the appliance
     $appliance = Appliances::findOrFail($applianceId);
-
-    // Power consumed per hour in watts (from database)
     $powerConsumedWatts = $appliance->power_consumption;
-
-    // Convert power consumption to kilowatt-hours (kWh)
-    $powerConsumedKWh = $powerConsumedWatts / 1000; // because 1 kW = 1000 W
-
-    // Calculate duration in hours
+    $powerConsumedKWh = $powerConsumedWatts / 1000;
     $durationHours = $durationMinutes / 60;
-
-    // Total energy used in kWh
     $energyUsed = $powerConsumedKWh * $durationHours;
 
-    // Calculate estimated cost
-    $estimatedCost = $energyUsed * $costPerHour;
+    // Get cost from timeslot
+    $slotCost = DB::table('timeslot_costs')
+        ->where('start_time', '<=', $startTime->format('H:i:s'))
+        ->where('end_time', '>', $startTime->format('H:i:s'))
+        ->value('cost_per_kwh');
 
-    // Round to 2 decimal places for currency
-    return round($estimatedCost, 2);
+    $costPerKwh = $slotCost ?? 0.2; // fallback default
+
+    return round($energyUsed * $costPerKwh, 2);
 }
+private function findCheapestTimeSlot(Carbon $scheduleStart, Carbon $scheduleEnd, int $durationMinutes)
+{
+    $allSlots = DB::table('timeslot_costs')->orderBy('cost_per_kwh')->get();
+    foreach ($allSlots as $slot) {
+        $slotStart = Carbon::createFromFormat('H:i:s', $slot->start_time);
+        $slotEnd = Carbon::createFromFormat('H:i:s', $slot->end_time);
+
+        // Check if slot is within the user's schedule range
+        if ($slotStart->between($scheduleStart, $scheduleEnd) &&
+            $slotEnd->diffInMinutes($slotStart) >= $durationMinutes) {
+            return $slotStart;
+        }
+    }
+
+    // Fallback to a random time if no slot fits
+    return $this->randomTimeBetween($scheduleStart, $scheduleEnd->copy()->subMinutes($durationMinutes));
+}
+
+
 
 }
