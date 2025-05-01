@@ -90,26 +90,6 @@
                             <option value="standby">Standby</option>
                         </select>
                     </div>
-
-                    <div class="form-group">
-                        <label for="scheduleTime">Schedule Time</label>
-                        <select class="form-control" id="scheduleTime" name="schedule_time" required>
-                            <option value="00:00:00">00:00:00</option>
-                            <option value="03:00:00">03:00:00</option>
-                            <option value="06:00:00">06:00:00</option>
-                            <option value="09:00:00">09:00:00</option>
-                            <option value="12:00:00">12:00:00</option>
-                            <option value="15:00:00">15:00:00</option>
-                            <option value="18:00:00">18:00:00</option>
-                            <option value="21:00:00">21:00:00</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="dailyUsage">Daily Usage (Hours)</label>
-                        <input type="number" class="form-control" id="dailyUsage" name="daily_usage_hours" step="0.01" min="0" max="24" required>
-                    </div>
-
                     <div class="form-group">
                         <label for="efficiencyRating">Energy Efficiency Rating</label>
                         <select class="form-control" id="efficiencyRating" name="energy_efficiency_rating" required>

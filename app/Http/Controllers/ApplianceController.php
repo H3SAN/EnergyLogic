@@ -32,18 +32,16 @@ class ApplianceController extends Controller
             'name' => 'required|string|max:255',
             'power_consumption' => 'required|numeric|min:1',
             'status' => 'required|in:on,off,standby',
-            'schedule_time' => 'nullable|date_format:H:i:s',
-            'daily_usage_hours' => 'required|numeric|min:0|max:24',
             'energy_efficiency_rating' => 'required|in:A++,A+,A,B,C,D,E',
         ]);
+        $userId = 1;
 
         // Create and save the appliance
         $appliance = new Appliances();
         $appliance->name = $request->name;
+        $appliance->user_id = $userId;
         $appliance->power_consumption = $request->power_consumption;
         $appliance->status = $request->status;
-        $appliance->schedule_time = $request->schedule_time ?? null;
-        $appliance->daily_usage_hours = $request->daily_usage_hours;
         $appliance->energy_efficiency_rating = $request->energy_efficiency_rating;
         $appliance->save();
 
