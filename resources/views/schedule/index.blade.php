@@ -21,6 +21,7 @@
                                     <th>Stop Time</th>
                                     <th>Duration</th>
                                     <th>Estimated Cost (Daily)</th>
+                                    <th>Power Consumed</th>
                                     {{-- <th>Cost</th>
                         <th>Actions</th>
                     </tr> --}}
@@ -32,6 +33,7 @@
                                     <th>Stop Time</th>
                                     <th>Duration</th>
                                     <th>Estimated Cost (Daily)</th>
+                                    <th>Power Consumed</th>
                                     {{-- <th>Cost</th>
                     <th>Actions</th> --}}
                                 </tr>
@@ -45,6 +47,7 @@
                                             <td>{{ $data->end_time }}</td>
                                             <td>{{ $data->duration_minutes ?? 'N/A' }} Minutes</td>
                                             <td>{{ $data->estimated_cost ?? 'N/A' }}</td>
+                                            <td>{{ $data->power_consumed ?? 'N/A' }}</td>
                                             {{-- <td>{{ \Carbon\Carbon::parse($data->appliance->schedule_time)->format('h:i A') ?? 'N/A' }}</td> --}}
                                         </tr>
                                     @endif

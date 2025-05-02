@@ -61,7 +61,7 @@ public function addSchedule(Request $request)
     $schedule = Schedule::create([
         'name' => $validated['name'],
         'is_active' => $isActive,
-        'user_id' => 1, // replace with auth()->id()
+        'user_id' => 1, // Replace with auth()->id() if authentication is used
         'start_time' => $validated['start_time'],
         'end_time' => $validated['end_time'],
     ]);
@@ -72,9 +72,8 @@ public function addSchedule(Request $request)
     foreach ($validated['appliances'] as $applianceId) {
         $duration = (int) $validated['timeslots'][$applianceId]['duration'];
 
-        // Use dynamic optimizer for power-hungry appliances
         $appliance = Appliances::find($applianceId);
-        $isHeavy = $appliance->power_consumption > 1500; // Example threshold
+        $isHeavy = $appliance->power_consumption > 1500;
 
         if ($isHeavy) {
             $startTime = $this->findCheapestTimeSlot($scheduleStart, $scheduleEnd, $duration);
@@ -83,18 +82,24 @@ public function addSchedule(Request $request)
         }
 
         $endTime = $startTime->copy()->addMinutes($duration);
-        $cost = $this->calculateEstimatedCost($applianceId, $duration, $startTime);
+
+        // Destructure the returned array
+        $costData = $this->calculateEstimatedCost($applianceId, $duration, $startTime);
+        $energyUsed = $costData['energy_used_kwh'];
+        $estimatedCost = $costData['estimated_cost'];
 
         $schedule->appliances()->attach($applianceId, [
             'duration_minutes' => $duration,
-            'estimated_cost' => $cost,
+            'estimated_cost' => $estimatedCost,
             'start_time' => $startTime->format('H:i'),
             'end_time' => $endTime->format('H:i'),
+            'power_consumed' => $energyUsed,
         ]);
     }
 
     return redirect()->route('schedule.index')->with('success', 'Schedule created successfully!');
 }
+
 
 
 // Helper function to get a random Carbon time between two Carbon instances
@@ -171,9 +176,14 @@ private function calculateEstimatedCost($applianceId, $durationMinutes, Carbon $
         ->value('cost_per_kwh');
 
     $costPerKwh = $slotCost ?? 0.2; // fallback default
+    $estimatedCost = round($energyUsed * $costPerKwh, 2);
 
-    return round($energyUsed * $costPerKwh, 2);
+    return [
+        'energy_used_kwh' => $energyUsed,
+        'estimated_cost' => $estimatedCost,
+    ];
 }
+
 private function findCheapestTimeSlot(Carbon $scheduleStart, Carbon $scheduleEnd, int $durationMinutes)
 {
     $allSlots = DB::table('timeslot_costs')->orderBy('cost_per_kwh')->get();

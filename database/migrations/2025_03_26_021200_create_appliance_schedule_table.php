@@ -16,6 +16,7 @@ class CreateApplianceScheduleTable extends Migration
             $table->time('end_time');   // new end time column
             $table->integer('duration_minutes');
             $table->float('estimated_cost');
+            $table->float('power_consumed');
             $table->timestamps();
     
             $table->foreign('schedule_id')->references('id')->on('schedules')->onDelete('cascade');
