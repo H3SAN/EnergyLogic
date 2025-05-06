@@ -16,6 +16,7 @@ class CreateApplianceScheduleTable extends Migration
             $table->time('end_time');   // new end time column
             $table->integer('duration_minutes');
             $table->float('estimated_cost');
+            $table->float('cost_saved');
             $table->float('power_consumed');
             $table->timestamps();
     

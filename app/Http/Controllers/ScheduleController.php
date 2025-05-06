@@ -88,9 +88,13 @@ public function addSchedule(Request $request)
         $energyUsed = $costData['energy_used_kwh'];
         $estimatedCost = $costData['estimated_cost'];
 
+        $baselineCost = $this->calculateBaselineCost($applianceId, $duration);
+        $savings = $baselineCost - $estimatedCost;
+
         $schedule->appliances()->attach($applianceId, [
             'duration_minutes' => $duration,
             'estimated_cost' => $estimatedCost,
+            'cost_saved' => $savings,
             'start_time' => $startTime->format('H:i'),
             'end_time' => $endTime->format('H:i'),
             'power_consumed' => $energyUsed,
@@ -202,6 +206,17 @@ private function findCheapestTimeSlot(Carbon $scheduleStart, Carbon $scheduleEnd
     return $this->randomTimeBetween($scheduleStart, $scheduleEnd->copy()->subMinutes($durationMinutes));
 }
 
+private function calculateBaselineCost($applianceId, $durationMinutes)
+{
+    $appliance = Appliances::findOrFail($applianceId);
+    $powerConsumedWatts = $appliance->power_consumption;
+    $powerConsumedKWh = $powerConsumedWatts / 1000;
+    $durationHours = $durationMinutes / 60;
+    $energyUsed = $powerConsumedKWh * $durationHours;
 
+    $flatRate = 0.20; // assumed average cost
+
+    return round($energyUsed * $flatRate, 2);
+}
 
 }
