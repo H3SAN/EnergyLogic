@@ -42,8 +42,19 @@ class ScheduleController extends Controller
     // All available appliances 
     $AllAppliances = Appliances::where('user_id', $userId)->get();
 
+        // Initialize total estimated cost
+    $totalEstimated = 0;
+
+    if ($activeSchedule) {
+        // Sum estimated_cost dynamically for the active schedule
+        $totalEstimated = ApplianceSchedule::where('schedule_id', $activeSchedule->id)
+            ->sum('estimated_cost');
+    }
+
+
     // Total cost saved across all schedules for this user
     $totalCostSaved = $this->getTotalCostSaved(1);
+    $totalEstimated = $this->getTotalEstimatedCost(1);
 
     return view('schedule.index', [
         'appliances' => $data,
@@ -51,7 +62,8 @@ class ScheduleController extends Controller
         'schedule' => $schedules,
         'AllAppliances' => $AllAppliances,
         'TotalSaved' => $totalSaved,
-        'TotalCostSaved' => $totalCostSaved
+        'TotalCostSaved' => $totalCostSaved,
+        'totalEstimated' => $totalEstimated
     ]);
 }
 
@@ -107,6 +119,7 @@ public function addSchedule(Request $request)
 
         $baselineCost = $this->calculateBaselineCost($applianceId, $duration);
         $savings = $baselineCost - $estimatedCost;
+        
 
         $schedule->appliances()->attach($applianceId, [
             'duration_minutes' => $duration,
@@ -240,6 +253,14 @@ public function getTotalCostSaved($userId)
     $total = ApplianceSchedule::whereHas('schedule', function ($query) use ($userId) {
         $query->where('user_id', $userId);
     })->sum('cost_saved');
+
+    return $total;
+}
+public function getTotalEstimatedCost($userId)
+{
+    $total = ApplianceSchedule::whereHas('schedule', function ($query) use ($userId) {
+        $query->where('user_id', $userId);
+    })->sum('estimated_cost');
 
     return $total;
 }
