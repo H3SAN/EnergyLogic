@@ -15,29 +15,46 @@ class ScheduleController extends Controller
 {
     public function index()
 {
-    //This displays the appliances on the active schedule
+    $userId = 1; // later replace with auth()->id()
+
+    // Get the active schedule
+    $activeSchedule = Schedule::where('is_active', 1)
+        ->where('user_id', $userId)
+        ->first();
+
+    // Initialize total saved
+    $totalSaved = 0;
+
+    if ($activeSchedule) {
+        // Sum cost_saved dynamically for the active schedule
+        $totalSaved = ApplianceSchedule::where('schedule_id', $activeSchedule->id)
+            ->sum('cost_saved');
+    }
+
+    // Displays appliances on the active schedule
     $data = ApplianceSchedule::whereHas('schedule', function ($query) {
         $query->where('is_active', 1);
     })->with(['appliance', 'schedule'])->get();
 
-    // This displays the active schedule name
-    $activeSchedule = Schedule::where('is_active', 1)
-    ->where('user_id', 1)
-    ->first();
+    // All available schedules 
+    $schedules = Schedule::where('user_id', $userId)->get();
 
-    // This is to display all available schedules 
-    $schedules = Schedule::where('user_id', 1)->get(); // change this to auth()->id() later
+    // All available appliances 
+    $AllAppliances = Appliances::where('user_id', $userId)->get();
 
-    // This is to display all available appliances 
-    $AllAppliances = Appliances::where('user_id', 1)->get(); // change this to auth()->id() later
+    // Total cost saved across all schedules for this user
+    $totalCostSaved = $this->getTotalCostSaved(1);
 
     return view('schedule.index', [
         'appliances' => $data,
         'ActiveSchedule' => $activeSchedule,
         'schedule' => $schedules,
-        'AllAppliances' => $AllAppliances
+        'AllAppliances' => $AllAppliances,
+        'TotalSaved' => $totalSaved,
+        'TotalCostSaved' => $totalCostSaved
     ]);
 }
+
 
 public function addSchedule(Request $request)
 {
@@ -218,5 +235,12 @@ private function calculateBaselineCost($applianceId, $durationMinutes)
 
     return round($energyUsed * $flatRate, 2);
 }
+public function getTotalCostSaved($userId)
+{
+    $total = ApplianceSchedule::whereHas('schedule', function ($query) use ($userId) {
+        $query->where('user_id', $userId);
+    })->sum('cost_saved');
 
+    return $total;
+}
 }

@@ -34,7 +34,7 @@
                                     <th>Stop Time</th>
                                     <th>Duration</th>
                                     <th>Estimated Cost (Daily)</th>
-                                    <th>Cost Saved</th>
+                                    <th>Cost Saved{{ $TotalSaved ?? 'N/A' }}</th>
                                     <th>Power Consumed</th>
                                     {{-- <th>Cost</th>
                     <th>Actions</th> --}}
